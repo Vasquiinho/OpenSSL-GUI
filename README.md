@@ -17,7 +17,7 @@ Do not run main.py with sudo if you want to use ssh. sshfs will not work properl
   - Some sign and verify options (-sign, -verify, -prverify, -signature)
   - Other Options (-c, -d, -hmac, -non-fips-allow, -fips-fingerprint, -rand (only one file))
 
-
+***Important note regarding functionality implemented:** Some of the options of the different OpenSSL commands may require other options. This applications will not check most of them, because i don't know what command options require other options. If the application fails to execute with the configuration the user inserts, a popup will appear with the error message returned by openssl*
 
 
 (reminder to complete readme sometime in the future)
