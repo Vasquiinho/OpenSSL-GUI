@@ -1,19 +1,38 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
-# -- importar packages
-from popup_erro import Popup_Erro_Class
-
 import gi
 import sys
 import os
 import subprocess
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
+
+
+# -- IMPORTAR POPUPS. FECHAR APLICAÇÃO SE NÃO CONSEGUIR IMPORTAR
+try:
+    from popup_erro import Popup_Erro_Class
+    if "popup_erro" not in sys.modules:
+        print("File 'popup_erro' missing! Place this in the same folder as main.py")
+except Exception as e:
+    print("File 'popup_erro' is missing or not loaded properly!")
+    print(e)
+    exit(1)
+
+try:
+    from popup_resultado import Popup_Resultado_Class
+    if "popup_resultado" not in sys.modules:
+        print("File 'popup_resultado' missing! Place this in the same folder as main.py")
+except Exception as e:
+    print("File 'popup_resultado' is missing or not loaded properly!")
+    print(e)
+    exit(1)
+
+
+
 
 sftp_montado = True
 
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
 
 modulos_necessarios = ["subprocess", "os", "sys", "gi"]
 
@@ -60,17 +79,18 @@ builder.add_from_file("GUI/main.glade")
 # -- Importar e Iniciar classes relacionadas com as abas da stack. Se em falta, desativar abas onde são necessárias
 # -- -- aba_checksum.py
 try:
-    from aba_checksum import Aba_Checksum
-    if "aba_checksum" not in sys.modules:
-        print("File 'aba_checksum' missing! Place this in the same folder as main.py")
-        print("Checksum options have been disabled!")
-        builder.get_object("aba_checksums").set_sensitive(False)
+    from aba_digest import Aba_Digest
+    if "aba_digest" not in sys.modules:
+        print("File 'aba_digest' missing! Place this in the same folder as main.py")
+        print("Digest options have been disabled!")
+        builder.get_object("aba_digest").set_sensitive(False)
     else:
-        Aba_Checksum(builder)
+        Aba_Digest(builder)
 except Exception as e:
-    print("File 'aba_checksum' is missing or not loaded properly!")
-    print("Checksum options have been disabled!")
-    builder.get_object("aba_checksums").set_sensitive(False)
+    print("File 'aba_digest' is missing or not loaded properly!")
+    print("Digest options have been disabled!")
+    builder.get_object("aba_digest").set_sensitive(False)
+    print(e)
 
 
 # -- -- aba_testes.py
@@ -100,12 +120,8 @@ window = builder.get_object("base")
 def terminar_programa(*args):
     local_mount = os.path.expanduser('~/mount_gui_openssl_sftp')
     global sftp_montado
-
-
     if 'sftp_montado' not in globals():
         sftp_montado = False
-    
-
     if sftp_montado:
         desmontar = subprocess.Popen(["fusermount", "-u", local_mount],stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         stdout, stderr = desmontar.communicate()
