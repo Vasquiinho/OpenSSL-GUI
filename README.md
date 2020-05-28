@@ -22,6 +22,9 @@ Do not run main.py with sudo if you want to use ssh. sshfs will not work properl
 ***Also:** I'm new to OpenSSL, expect some missing validations (like specific file types needed for some commands, ...) or hints how to use the application*
 
 
+*Select files and directories without spaces in the name*
+
+
 (reminder to complete readme sometime in the future)
 
 Feel free to use and edit this project for your own needs.

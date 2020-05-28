@@ -301,7 +301,7 @@ class Aba_Digest:
                 nome_ficheiro_output = pasta + "/" + self.digest_output_pasta_nome_ficheiro
 
         if nome_ficheiro_output:
-            comando += " -out " + nome_ficheiro_output.replace(" ", "\ ")
+            comando += " -out " + nome_ficheiro_output.replace(" ", "\!space!/")
 
 
         # -- verificar opções sign e verify e verificar se possui ficheiros selecionados
@@ -314,7 +314,9 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                sign_verify_adicionar_comando += " -sign " + ficheiro.replace(" ", "\ ")
+                #if " " in ficheiro:
+                #    ficheiro = "\"" + ficheiro + "\""
+                sign_verify_adicionar_comando += " -sign " + ficheiro.replace(" ", "\!space!/")
         if self.digest_cb_verify.get_active():
             ficheiro = self.digest_filechooser_verify.get_filename()
             if not ficheiro:
@@ -323,7 +325,7 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                sign_verify_adicionar_comando += " -verify " + ficheiro.replace(" ", "\ ")
+                sign_verify_adicionar_comando += " -verify " + ficheiro.replace(" ", "\!space!/")
         if self.digest_cb_prverify.get_active():
             ficheiro = self.digest_filechooser_prverify.get_filename()
             if not ficheiro:
@@ -332,7 +334,7 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                sign_verify_adicionar_comando += " -prverify " + ficheiro.replace(" ", "\ ")
+                sign_verify_adicionar_comando += " -prverify " + ficheiro.replace(" ", "\!space!/")
         if self.digest_cb_signature.get_active():
             ficheiro = self.digest_filechooser_signature.get_filename()
             if not ficheiro:
@@ -341,7 +343,7 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                sign_verify_adicionar_comando += " -signature " + ficheiro.replace(" ", "\ ")
+                sign_verify_adicionar_comando += " -signature " + ficheiro.replace(" ", "\!space!/")
 
         comando += sign_verify_adicionar_comando
 
@@ -373,23 +375,32 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                outras_opcoes_adicionar_comando += " -rand " + ficheiro.replace(" ", "\ ")
+                if " " in ficheiro:
+                    ficheiro = "'" + ficheiro + "'"
+                outras_opcoes_adicionar_comando += " -rand " + ficheiro.replace(" ", "\!space!/")
 
         comando += " " + outras_opcoes_adicionar_comando
 
 
         # -- adicionar ficherio input ao comando (se exitir)
-        comando += " " + nome_ficheiro_input.replace(" ", "\ ")
+        comando += " " + nome_ficheiro_input.replace(" ", "\!space!/")
 
         print(comando)
+
+        lista = comando.split()
+        comando_final = []
+        for p in lista:
+            comando_final.append(p.replace("\!space!/", " "))
+
+        print(comando_final)
 
         # -- tentar executar
         try:
             if comando_pipe:
                 exec_comando_pip_digest = subprocess.Popen(comando_pipe.split(), stdout=subprocess.PIPE)
-                exec_comando_digest = subprocess.Popen(comando.split(), stdin=exec_comando_pip_digest.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                exec_comando_digest = subprocess.Popen(comando_final, stdin=exec_comando_pip_digest.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             else:
-                exec_comando_digest = subprocess.Popen(comando.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                exec_comando_digest = subprocess.Popen(comando_final, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
             if "binary" in self.digest_output_format:
                 # necessário passar pelo xxd se o output for binário, noutro caso o python tenta intrepertar cada byte
