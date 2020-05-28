@@ -8,7 +8,6 @@
     <property name="window_position">center</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
-    <property name="type_hint">dialog</property>
     <property name="has_resize_grip">True</property>
     <child type="titlebar">
       <placeholder/>
@@ -641,11 +640,12 @@
                                 <property name="margin_bottom">2</property>
                                 <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkCheckButton">
+                                  <object class="GtkCheckButton" id="digest_cb_sign">
                                     <property name="label" translatable="yes">Sign File</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
@@ -655,7 +655,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="digest_area_output_ficheiro1">
+                                  <object class="GtkBox" id="digest_area_sign">
                                     <property name="can_focus">False</property>
                                     <property name="margin_left">10</property>
                                     <property name="margin_right">10</property>
@@ -678,7 +678,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkFileChooserButton" id="digest_filechooser_output1">
+                                      <object class="GtkFileChooserButton" id="digest_filechooser_sign">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="margin_bottom">5</property>
@@ -698,11 +698,12 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton">
+                                  <object class="GtkCheckButton" id="digest_cb_verify">
                                     <property name="label" translatable="yes">Verify</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">5</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -713,7 +714,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="digest_area_output_ficheiro2">
+                                  <object class="GtkBox" id="digest_area_verify">
                                     <property name="can_focus">False</property>
                                     <property name="margin_left">10</property>
                                     <property name="margin_right">10</property>
@@ -736,7 +737,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkFileChooserButton" id="digest_filechooser_output2">
+                                      <object class="GtkFileChooserButton" id="digest_filechooser_verify">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="margin_bottom">5</property>
@@ -756,11 +757,12 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton">
+                                  <object class="GtkCheckButton" id="digest_cb_prverify">
                                     <property name="label" translatable="yes">Private Key Verify</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">5</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -771,7 +773,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="digest_area_output_ficheiro3">
+                                  <object class="GtkBox" id="digest_area_prverify">
                                     <property name="can_focus">False</property>
                                     <property name="margin_left">10</property>
                                     <property name="margin_right">10</property>
@@ -794,7 +796,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkFileChooserButton" id="digest_filechooser_output3">
+                                      <object class="GtkFileChooserButton" id="digest_filechooser_prverify">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="margin_bottom">5</property>
@@ -814,11 +816,12 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton">
+                                  <object class="GtkCheckButton" id="digest_cb_signature">
                                     <property name="label" translatable="yes">Signature</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">5</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -829,7 +832,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="digest_area_output_ficheiro4">
+                                  <object class="GtkBox" id="digest_area_signature">
                                     <property name="can_focus">False</property>
                                     <property name="margin_left">10</property>
                                     <property name="margin_right">10</property>
@@ -852,7 +855,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkFileChooserButton" id="digest_filechooser_output4">
+                                      <object class="GtkFileChooserButton" id="digest_filechooser_signature">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="margin_bottom">5</property>
@@ -862,6 +865,25 @@
                                         <property name="expand">False</property>
                                         <property name="fill">True</property>
                                         <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="digest_txt_output_pasta_extra2">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="margin_bottom">7</property>
+                                        <property name="label" translatable="yes">(the signature file need to be in binary format) </property>
+                                        <attributes>
+                                          <attribute name="style" value="italic"/>
+                                          <attribute name="weight" value="normal"/>
+                                          <attribute name="absolute-size" value="12000"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">2</property>
                                       </packing>
                                     </child>
                                   </object>
@@ -911,6 +933,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
@@ -925,6 +948,7 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
@@ -934,11 +958,12 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton" id="digest_outras_d1">
+                                  <object class="GtkCheckButton" id="digest_outras_cb_hmac">
                                     <property name="label" translatable="yes">-hmac</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
@@ -972,7 +997,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkEntry">
+                                      <object class="GtkEntry" id="digest_outras_hmac_key">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="placeholder_text" translatable="yes">hmac key</property>
@@ -991,11 +1016,12 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton" id="digest_outras_d2">
+                                  <object class="GtkCheckButton" id="digest_outras_non_fips_allow">
                                     <property name="label" translatable="yes">-non-fips-allow</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
@@ -1005,11 +1031,12 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton" id="digest_outras_d3">
+                                  <object class="GtkCheckButton" id="digest_outras_fips_fingerprint">
                                     <property name="label" translatable="yes">-fips-fingerprint</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
@@ -1019,11 +1046,12 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkCheckButton" id="digest_outras_d4">
+                                  <object class="GtkCheckButton" id="digest_outras_rand">
                                     <property name="label" translatable="yes">-rand</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
                                   <packing>
@@ -1057,7 +1085,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkFileChooserButton" id="digest_filechooser_output5">
+                                      <object class="GtkFileChooserButton" id="digest_filechooser_rand">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="margin_bottom">5</property>

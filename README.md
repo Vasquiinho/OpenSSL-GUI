@@ -19,6 +19,8 @@ Do not run main.py with sudo if you want to use ssh. sshfs will not work properl
 
 ***Important note regarding functionality implemented:** Some of the options of the different OpenSSL commands may require other options. This applications will not check most of them, because i don't know what command options require other options. If the application fails to execute with the configuration the user inserts, a popup will appear with the error message returned by openssl*
 
+***Also:** I'm new to OpenSSL, expect some missing validations (like specific file types needed for some commands, ...) or hints how to use the application*
+
 
 (reminder to complete readme sometime in the future)
 
