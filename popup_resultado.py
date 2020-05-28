@@ -36,9 +36,9 @@ class Handler_popup_resultado:
             exit(1)
 
 
-def main():
-    Popup_Resultado_Class("texto\nteste")
-    Gtk.main()
+#def main():
+#    Popup_Resultado_Class("texto\nteste")
+#    Gtk.main()
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()

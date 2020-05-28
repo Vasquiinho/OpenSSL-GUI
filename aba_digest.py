@@ -375,8 +375,6 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                if " " in ficheiro:
-                    ficheiro = "'" + ficheiro + "'"
                 outras_opcoes_adicionar_comando += " -rand " + ficheiro.replace(" ", "\!space!/")
 
         comando += " " + outras_opcoes_adicionar_comando
@@ -385,14 +383,10 @@ class Aba_Digest:
         # -- adicionar ficherio input ao comando (se exitir)
         comando += " " + nome_ficheiro_input.replace(" ", "\!space!/")
 
-        print(comando)
-
         lista = comando.split()
         comando_final = []
         for p in lista:
             comando_final.append(p.replace("\!space!/", " "))
-
-        print(comando_final)
 
         # -- tentar executar
         try:

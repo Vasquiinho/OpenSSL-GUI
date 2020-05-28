@@ -44,9 +44,9 @@ class Handler_popup_erro:
             exit(1)
 
 
-def main():
-    Popup_Erro_Class("Teste", "Desc", "Detalhe\ndefsaf")
-    Gtk.main()
+#def main():
+#    Popup_Erro_Class("Teste", "Desc", "Detalhe\ndefsaf")
+#    Gtk.main()
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+#    main()

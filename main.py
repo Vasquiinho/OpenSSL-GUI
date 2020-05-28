@@ -92,7 +92,6 @@ except Exception as e:
     builder.get_object("aba_digest").set_sensitive(False)
     print(e)
 
-
 # -- -- aba_testes.py
 try:
     from aba_testes import Aba_Testes
@@ -106,6 +105,21 @@ except Exception as e:
     print("File 'aba_testes' is missing or not loaded properly!")
     print("Testes options have been disabled!")
     builder.get_object("aba_testes").set_sensitive(False)
+    print(e)
+
+# -- -- aba_rand.py
+try:
+    from aba_rand import Aba_Rand
+    if "aba_rand" not in sys.modules:
+        print("File 'aba_rand' missing! Place this in the same folder as main.py")
+        print("Rand options have been disabled!")
+        builder.get_object("aba_rand").set_sensitive(False)
+    else:
+        Aba_Rand(builder)
+except Exception as e:
+    print("File 'aba_rand' is missing or not loaded properly!")
+    print("Rand options have been disabled!")
+    builder.get_object("aba_rand").set_sensitive(False)
     print(e)
 
 
