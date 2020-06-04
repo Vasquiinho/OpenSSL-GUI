@@ -408,14 +408,14 @@ class Aba_Digest:
                 if not stderr:
                     Popup_Resultado_Class(stdout)
                 else:
-                    Popup_Erro_Class("Error", "An error as occurred trying to execute the digest command! See details...", stderr)
+                    Popup_Erro_Class("Error", "An error as occurred trying to execute the digest command! See details...", str(stderr))
             elif self.digest_local_output == "ficheiro" or self.digest_local_output == "pasta" :
                 if not stderr:
                     Popup_Resultado_Class("Command executed successfully! Check the output file")
                 else:
-                    Popup_Erro_Class("Error", "An error as occurred trying to execute the digest command! See details...", stderr)
+                    Popup_Erro_Class("Error", "An error as occurred trying to execute the digest command! See details...", str(stderr))
 
         
         except Exception as e:
-            Popup_Erro_Class("Error", "An error as occurred trying to execute the digest command! See details...", e)
+            Popup_Erro_Class("Error", "An error as occurred trying to execute the digest command! See details...", str(e))
 

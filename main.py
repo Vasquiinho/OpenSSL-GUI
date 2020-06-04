@@ -122,6 +122,21 @@ except Exception as e:
     builder.get_object("aba_rand").set_sensitive(False)
     print(e)
 
+# -- -- aba_req.py
+try:
+    from aba_req import Aba_Req
+    if "aba_req" not in sys.modules:
+        print("File 'aba_req' missing! Place this in the same folder as main.py")
+        print("Rand options have been disabled!")
+        builder.get_object("aba_req").set_sensitive(False)
+    else:
+        Aba_Req(builder)
+except Exception as e:
+    print("File 'aba_req' is missing or not loaded properly!")
+    print("Rand options have been disabled!")
+    builder.get_object("aba_req").set_sensitive(False)
+    print(e)
+
 
 
 
@@ -134,6 +149,9 @@ window = builder.get_object("base")
 def terminar_programa(*args):
     local_mount = os.path.expanduser('~/mount_gui_openssl_sftp')
     global sftp_montado
+
+    sftp_montado = False
+
     if 'sftp_montado' not in globals():
         sftp_montado = False
     if sftp_montado:

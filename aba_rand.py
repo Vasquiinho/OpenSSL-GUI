@@ -286,14 +286,14 @@ class Aba_Rand:
                 if not stderr:
                     Popup_Resultado_Class(stdout)
                 else:
-                    Popup_Erro_Class("Error", "An error as occurred trying to execute the rand command! See details...", stderr)
+                    Popup_Erro_Class("Error", "An error as occurred trying to execute the rand command! See details...", str(stderr))
             elif self.rand_tipo_output == "ficheiro" or self.rand_tipo_output == "pasta" :
                 if not stderr:
                     Popup_Resultado_Class("Command executed successfully! Check the output file")
                 else:
-                    Popup_Erro_Class("Error", "An error as occurred trying to execute the rand command! See details...", stderr)
+                    Popup_Erro_Class("Error", "An error as occurred trying to execute the rand command! See details...", str(stderr))
 
         except Exception as e:
-            Popup_Erro_Class("Error", "An error as occurred trying to execute the rand command! See details...", e)
+            Popup_Erro_Class("Error", "An error as occurred trying to execute the rand command! See details...", str(e))
     
     
