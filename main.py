@@ -92,20 +92,21 @@ except Exception as e:
     builder.get_object("aba_digest").set_sensitive(False)
     print(e)
 
+# -- aba testes removed from main.glade !!
 # -- -- aba_testes.py
-try:
-    from aba_testes import Aba_Testes
-    if "aba_testes" not in sys.modules:
-        print("File 'aba_testes' missing! Place this in the same folder as main.py")
-        print("Testes options have been disabled!")
-        builder.get_object("aba_testes").set_sensitive(False)
-    else:
-        Aba_Testes(builder)
-except Exception as e:
-    print("File 'aba_testes' is missing or not loaded properly!")
-    print("Testes options have been disabled!")
-    builder.get_object("aba_testes").set_sensitive(False)
-    print(e)
+#try:
+#    from aba_testes import Aba_Testes
+#    if "aba_testes" not in sys.modules:
+#        print("File 'aba_testes' missing! Place this in the same folder as main.py")
+#        print("Testes options have been disabled!")
+#        builder.get_object("aba_testes").set_sensitive(False)
+#    else:
+#        Aba_Testes(builder)
+#except Exception as e:
+#    print("File 'aba_testes' is missing or not loaded properly!")
+#    print("Testes options have been disabled!")
+#    builder.get_object("aba_testes").set_sensitive(False)
+#    print(e)
 
 # -- -- aba_rand.py
 try:

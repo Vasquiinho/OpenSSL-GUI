@@ -39,20 +39,53 @@
       </row>
     </data>
   </object>
-  <object class="GtkListStore" id="liststore2">
+  <object class="GtkListStore" id="req_liststore_x509_authorityKeyIdentifier">
     <columns>
       <!-- column-name Name -->
       <column type="gchararray"/>
     </columns>
     <data>
       <row>
-        <col id="0" translatable="yes">a</col>
+        <col id="0" translatable="yes">keyid:{key}</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="req_liststore_x509_basicConstraints">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">CA:TRUE</col>
       </row>
       <row>
-        <col id="0" translatable="yes">b</col>
+        <col id="0" translatable="yes">CA:FALSE</col>
       </row>
       <row>
-        <col id="0" translatable="yes">c</col>
+        <col id="0" translatable="yes">pathlen:{num}</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="req_liststore_x509_certificatePolicies">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">1.2.4.5</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="req_liststore_x509_crlDistributionPoints">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">URI:http://{site}</col>
       </row>
     </data>
   </object>
@@ -88,6 +121,110 @@
       </row>
       <row>
         <col id="0">certificatePolicies</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="req_liststore_x509_extendedKeyUsage">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">serverAuth</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">clientAuth</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">codeSigning</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">emailProtection</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">timeStamping</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">OCSPSigning</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">ipsecIKE</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">msCodeInd</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">msCodeCom</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">msCTLSign</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">msEFS</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="req_liststore_x509_keyUsage">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">digitalSignature</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">nonRepudiation</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">keyEncipherment</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">dataEncipherment</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">keyAgreement</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">keyCertSign</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">cRLSign</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">encipherOnly</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">decipherOnly</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="req_liststore_x509_subjectAltName">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">URI:http://{site}</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">email:{mail}</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">IP:{IPv4/v6}</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="req_liststore_x509_subjectKeyIdentifier">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">{key}</col>
       </row>
     </data>
   </object>
@@ -132,55 +269,6 @@
           <object class="GtkStack" id="stack">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <child>
-              <object class="GtkScrolledWindow" id="aba_testes">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="shadow_type">in</property>
-                <child>
-                  <object class="GtkViewport">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Página incial - meter aqui gerar certificados? encript &amp; decript de ficheiros?
-</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkFileChooserButton" id="filechooser">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="title" translatable="yes">Select the file...</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="name">Principal - mudar para opção</property>
-                <property name="title" translatable="yes">Principal - mudar para opção</property>
-              </packing>
-            </child>
             <child>
               <object class="GtkScrolledWindow" id="aba_req">
                 <property name="visible">True</property>
@@ -617,13 +705,20 @@
                                     <child>
                                       <object class="GtkComboBoxText" id="req_inform_type">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="can_focus">False</property>
                                         <property name="active">0</property>
-                                        <property name="button_sensitivity">off</property>
+                                        <property name="button_sensitivity">on</property>
+                                        <property name="has_entry">True</property>
                                         <items>
                                           <item translatable="yes">PEM</item>
                                           <item translatable="yes">DER</item>
                                         </items>
+                                        <child internal-child="entry">
+                                          <object class="GtkEntry">
+                                            <property name="can_focus">False</property>
+                                          </object>
+                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
@@ -679,6 +774,49 @@
                                   </packing>
                                 </child>
                                 <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="margin_top">2</property>
+                                    <property name="margin_bottom">2</property>
+                                    <child>
+                                      <object class="GtkCheckButton" id="req_cb_input_passin">
+                                        <property name="label" translatable="yes">Input File Password (-passin)</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="draw_indicator">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkEntry" id="req_input_file_passin">
+                                        <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="visibility">False</property>
+                                        <property name="invisible_char">•</property>
+                                        <property name="placeholder_text" translatable="yes">Password</property>
+                                        <property name="input_purpose">password</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                                <child>
                                   <object class="GtkBox" id="digest_area_input_ficheiro1">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
@@ -727,7 +865,7 @@
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">2</property>
+                                    <property name="position">3</property>
                                   </packing>
                                 </child>
                               </object>
@@ -902,6 +1040,99 @@
                                         <property name="position">0</property>
                                       </packing>
                                     </child>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_top">2</property>
+                                        <property name="margin_bottom">2</property>
+                                        <child>
+                                          <object class="GtkCheckButton" id="req_cb_output_pubkey">
+                                            <property name="label" translatable="yes">Output public key? (-pubkey)</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <child>
+                                          <object class="GtkCheckButton" id="req_key_cb_new_key">
+                                            <property name="label" translatable="yes">Create new key? (-new)</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">3</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <child>
+                                          <object class="GtkCheckButton" id="req_key_cb_nodes">
+                                            <property name="label" translatable="yes">No encription in new key (-nodes)</property>
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="receives_default">False</property>
+                                            <property name="active">True</property>
+                                            <property name="draw_indicator">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkEntry" id="req_key_password">
+                                            <property name="visible">True</property>
+                                            <property name="sensitive">False</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="visibility">False</property>
+                                            <property name="invisible_char">•</property>
+                                            <property name="placeholder_text" translatable="yes">Password (required if -nodes is unchecked)</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">True</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">4</property>
+                                      </packing>
+                                    </child>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -934,7 +1165,6 @@
                             <property name="can_focus">True</property>
                             <property name="margin_top">5</property>
                             <property name="margin_bottom">5</property>
-                            <property name="expanded">True</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
@@ -1207,9 +1437,6 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="fill">True</property>
                                     <property name="position">6</property>
                                   </packing>
-                                </child>
-                                <child>
-                                  <placeholder/>
                                 </child>
                               </object>
                             </child>
@@ -1507,10 +1734,15 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="margin_left">10</property>
+                                <property name="margin_right">10</property>
+                                <property name="margin_top">5</property>
+                                <property name="margin_bottom">5</property>
                                 <property name="orientation">vertical</property>
+                                <property name="spacing">2</property>
                                 <child>
-                                  <object class="GtkCheckButton" id="req_outras_rand">
-                                    <property name="label" translatable="yes">Use a rand file (-rand)</property>
+                                  <object class="GtkCheckButton" id="req_outras_subject">
+                                    <property name="label" translatable="yes">Print subject information (-subject)</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
@@ -1524,7 +1756,171 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="rand_area_ficheiro_rand1">
+                                  <object class="GtkCheckButton" id="req_outras_text">
+                                    <property name="label" translatable="yes">Print certificate in text form (-text)</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="req_outras_noout">
+                                    <property name="label" translatable="yes">-noout</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="req_outras_modulus">
+                                    <property name="label" translatable="yes">-modulus</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="req_outras_verify">
+                                    <property name="label" translatable="yes">Verify Signature in the Request (-verify)</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">4</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <child>
+                                      <object class="GtkCheckButton" id="req_outras_digest">
+                                        <property name="label" translatable="yes">Sign with digest (-digest)</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="draw_indicator">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkComboBoxText" id="req_outras_algoritmos_digest">
+                                        <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_top">2</property>
+                                        <property name="margin_bottom">5</property>
+                                        <property name="active">0</property>
+                                        <items>
+                                          <item id="&lt;inserir ID&gt;" translatable="yes">Select option...</item>
+                                        </items>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">5</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="req_outras_precert">
+                                    <property name="label" translatable="yes">-precert</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">6</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="req_outras_utf8">
+                                    <property name="label" translatable="yes">-utf8</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">7</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="req_outras_batch">
+                                    <property name="label" translatable="yes">-batch</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">8</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="req_outras_rand">
+                                    <property name="label" translatable="yes">Use a rand file (-rand)</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">9</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="req_area_ficheiro_rand">
                                     <property name="can_focus">False</property>
                                     <property name="margin_bottom">5</property>
                                     <property name="orientation">vertical</property>
@@ -1562,7 +1958,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">1</property>
+                                    <property name="position">10</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -1577,7 +1973,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">2</property>
+                                    <property name="position">11</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -1596,11 +1992,11 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">3</property>
+                                    <property name="position">12</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox" id="rand_area_writerand1">
+                                  <object class="GtkBox" id="req_area_writerand">
                                     <property name="can_focus">False</property>
                                     <property name="margin_top">5</property>
                                     <property name="margin_bottom">5</property>
@@ -1770,7 +2166,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">4</property>
+                                    <property name="position">13</property>
                                   </packing>
                                 </child>
                               </object>
@@ -1829,7 +2225,6 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
               <packing>
                 <property name="name">Req</property>
                 <property name="title" translatable="yes">Req</property>
-                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -2910,7 +3305,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
               <packing>
                 <property name="name">Digest</property>
                 <property name="title" translatable="yes">Digest</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -3610,7 +4005,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
               <packing>
                 <property name="name">Rand</property>
                 <property name="title" translatable="yes">Rand</property>
-                <property name="position">3</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
