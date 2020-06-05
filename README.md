@@ -40,7 +40,7 @@ Do not run main.py with sudo if you want to use ssh. sshfs will not work properl
 
 
 ---
-This application was developed for the Network and Systems Security Curricular Unit. This was the first time i worked with Python GTK, Glade and OpenSSL, so expect some "bad practices" in Python code with gtk things, and "most used" features of openssl missing, since i don't have the experience with it to identify what those features are, the commands implemented here were just by checking the docs and some websites found on google.
+This application was developed for the Network and Systems Security Curricular Unit. This was the first time i worked with Python GTK, Glade, Paramiko and OpenSSL, so expect some "bad practices" in Python code with gtk things, and "most used" features of openssl missing, since i don't have the experience with it to identify what those features are, the commands implemented here were just by checking the docs and some websites found on google.
 
 (reminder to complete readme sometime in the future)
 

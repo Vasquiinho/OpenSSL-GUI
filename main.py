@@ -7,6 +7,7 @@ import os
 import subprocess
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
+import paramiko
 
 
 # -- IMPORTAR POPUPS. FECHAR APLICAÇÃO SE NÃO CONSEGUIR IMPORTAR
@@ -27,8 +28,6 @@ except Exception as e:
     print("File 'popup_resultado' is missing or not loaded properly!")
     print(e)
     exit(1)
-
-
 
 
 sftp_montado = True
@@ -54,6 +53,9 @@ try:
 except FileNotFoundError as erro:
     Popup_Erro_Class("Warning", "OpenSSL not found in the system! This application will only work if you connect, via ssh, to a system with openssl installed!", "OpenSSL not found in the system!")
 
+
+# ------- SSH ---------
+ssh_client = None
 
 
 # -- QUANDO FIZER PARTE SSH, VERIFICAR SE OPEN SSL E SSH ESTÂO INSTALADOS
@@ -138,14 +140,24 @@ except Exception as e:
     builder.get_object("aba_req").set_sensitive(False)
     print(e)
 
+# -- -- aba_ssh.py
+try:
+    from aba_ssh import Aba_SSH
+    if "aba_ssh" not in sys.modules:
+        print("File 'aba_ssh' missing! Place this in the same folder as main.py")
+        print("Rand options have been disabled!")
+        #builder.get_object("aba_ssh").set_sensitive(False)
+    else:
+        Aba_SSH(builder, ssh_client)
+except Exception as e:
+    print("File 'aba_ssh' is missing or not loaded properly!")
+    print("Rand options have been disabled!")
+    #builder.get_object("aba_ssh").set_sensitive(False)
+    print(e)
 
 
-
-#ournewbutton = builder.get_object("btn")
-#ournewbutton.set_label("Hello, World!")
 
 window = builder.get_object("base")
-
 
 def terminar_programa(*args):
     local_mount = os.path.expanduser('~/mount_gui_openssl_sftp')
@@ -174,3 +186,7 @@ def terminar_programa(*args):
 window.connect("delete-event", terminar_programa)
 window.show_all()
 Gtk.main()
+
+
+
+
