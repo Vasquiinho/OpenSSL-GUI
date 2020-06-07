@@ -8,7 +8,7 @@ Developed in Ubuntu 20.04 and Python 3.8.
 
 Still in development.
 
-Do not run main.py with sudo if you want to use ssh. sshfs will not work properly. You can run with sudo, but all filepickers will be replaced with textinputs, and you'll need to write the paths by hand. SSHFS is used to mount the remote system filesystem so that the user can use the filechoosers inputs to select the files in the remote system via gui.
+Do not run main.py with sudo if you want to use ssh. SSHFS will not work properly, and because of that SSH connection will not be allowed. SSHFS is used to mount the remote system filesystem so that the user can use the filechoosers inputs to select the files in the remote system via gui.
 
 ### Functionality soo far
 - Req Options (Request Certificate or Generate Self-Signed Certificate)
@@ -30,6 +30,8 @@ Do not run main.py with sudo if you want to use ssh. sshfs will not work properl
   - Output do file, to directory or to a popup with a textarea showing the result
   - Use and select a rand file (-rand)
   - Write a rand file (-writerand) to a file or to directory
+- SSH Connection to server to execute commands
+  - Server filesystem is also mounted so user can easily select files on the server
 
 
 ***Important note regarding functionality implemented:** Some of the options the users specifies to execute the OpenSSL commands may require other options. This applications will not check most of them, because i don't know what command options require other options (i'm new to openssl). If the application fails to execute with the configuration the user inserts, a popup will appear with the error message returned by openssl*

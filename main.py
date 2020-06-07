@@ -30,10 +30,9 @@ except Exception as e:
     exit(1)
 
 
-sftp_montado = True
+sftp_montado = False
 
-
-modulos_necessarios = ["subprocess", "os", "sys", "gi"]
+modulos_necessarios = ["subprocess", "os", "sys", "gi", "paramiko"]
 
 for modulo in modulos_necessarios:
     if modulo not in sys.modules:
@@ -56,10 +55,6 @@ except FileNotFoundError as erro:
 
 # ------- SSH ---------
 ssh_client = None
-
-
-# -- QUANDO FIZER PARTE SSH, VERIFICAR SE OPEN SSL E SSH ESTÂO INSTALADOS
-# -- VERIFICAR OPENSSL NO SYSTEMA ONDE FAZ LOGIN
 
 # -- verifica sshfs, para montar sftp para os filechoosers
 try:
@@ -163,7 +158,7 @@ def terminar_programa(*args):
     local_mount = os.path.expanduser('~/mount_gui_openssl_sftp')
     global sftp_montado
 
-    sftp_montado = False
+    Aba_SSH.desconecta(ssh_client)
 
     if 'sftp_montado' not in globals():
         sftp_montado = False
