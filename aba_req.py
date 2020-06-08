@@ -28,6 +28,7 @@ class Aba_Req:
     req_comando = "openssl req"
     req_btn_executar = None
     req_lbl_erro_config = None
+    aba_ssh = None
 
     # subject info
     req_subject_name = None
@@ -129,8 +130,9 @@ class Aba_Req:
     req_writerand_nome_ficheiro = "gui_openssl_writerand_output"
     req_writerand_tipo_output = "ficheiro"
 
-    def __init__(self, builder):
+    def __init__(self, builder, aba_ssh):
         self.builder = builder
+        self.aba_ssh = aba_ssh
 
         self.req_btn_executar = self.builder.get_object("req_btn_executar")
         self.req_btn_executar.connect("clicked", self.__btn_executar_clicked)
@@ -443,7 +445,7 @@ class Aba_Req:
         if self.req_subject_email.get_text():
             comando_subject_info += "/emailAddress=" + self.req_subject_email.get_text()
         if comando_subject_info:
-            comando += " -subj " + comando_subject_info.replace(" ", "\!space!/") + " "
+            comando += " -subj \"" + comando_subject_info.replace(" ", "\!space!/") + "\" "
         
         # opcoes input
         if self.req_cb_input_format.get_active():
@@ -456,7 +458,7 @@ class Aba_Req:
                 self.req_lbl_erro_config.set_visible(True)
                 return
             else:
-                comando += " -keyform " + ficheiro.replace(" ", "\!space!/") + " "
+                comando += " -in \"" + ficheiro.replace(" ", "\!space!/") + "\" "
         if self.req_cb_input_config.get_active():
             ficheiro = self.req_filechooser_input_config.get_filename()
             if not ficheiro:
@@ -465,7 +467,7 @@ class Aba_Req:
                 self.req_lbl_erro_config.set_visible(True)
                 return
             else:
-                comando += " -keyform " + ficheiro.replace(" ", "\!space!/") + " "
+                comando += " -config \"" + ficheiro.replace(" ", "\!space!/") + "\" "
         if self.req_cb_input_passin.get_active():
             if not self.req_input_file_passin.get_text():
                 txt_lbl_erro = "You must insert a password for the input file in input settings"
@@ -487,7 +489,7 @@ class Aba_Req:
                 self.req_lbl_erro_config.set_visible(True)
                 return
             else:
-                comando += " -key " + ficheiro.replace(" ", "\!space!/") + " "
+                comando += " -key \"" + ficheiro.replace(" ", "\!space!/") + "\" "
         if self.req_cb_output_key.get_active():
             ficheiro = self.req_filechooser_output_key.get_filename()
             if not ficheiro:
@@ -496,7 +498,7 @@ class Aba_Req:
                 self.req_lbl_erro_config.set_visible(True)
                 return
             else:
-                comando += " -keyout " + ficheiro.replace(" ", "\!space!/") + " "
+                comando += " -keyout \"" + ficheiro.replace(" ", "\!space!/") + "\" "
         if self.req_cb_output_pubkey.get_active():
             comando += " -pubkey "
         if self.req_key_cb_new_key.get_active():
@@ -564,7 +566,7 @@ class Aba_Req:
                 self.req_lbl_erro_config.set_visible(True)
                 return
             else:
-                comando += " -rand " + ficheiro.replace(" ", "\!space!/")
+                comando += " -rand \"" + ficheiro.replace(" ", "\!space!/") + "\""
 
         ficheiro_local_writerand = ""
         if self.req_outras_writerand.get_active():
@@ -588,7 +590,7 @@ class Aba_Req:
                     ficheiro_local_writerand = pasta + "/" + self.req_writerand_nome_ficheiro
 
         if ficheiro_local_writerand:
-            comando += " -writerand " + ficheiro_local_writerand.replace(" ", "\!space!/")
+            comando += " -writerand \"" + ficheiro_local_writerand.replace(" ", "\!space!/") + "\""
 
 
         # -- verificar e selecionar o local do output do resultado
@@ -614,7 +616,7 @@ class Aba_Req:
                 ficheiro_local_output = pasta + "/" + self.req_output_pasta_nome_ficheiro
 
         if ficheiro_local_output:
-            comando += " -out " + ficheiro_local_output.replace(" ", "\!space!/")
+            comando += " -out \"" + ficheiro_local_output.replace(" ", "\!space!/") + "\""
 
         # outras verificações
         # -- se não possuir -in, nem ser -x509, necessária opção -new ou -newkey
@@ -624,19 +626,23 @@ class Aba_Req:
         lista = comando.split()
         comando_final = []
         for p in lista:
-            comando_final.append(p.replace("\!space!/", " "))
+            comando_final.append(p.replace("\!space!/", " ").replace("\"", ""))
 
         # -- tentar executar
         try:
-            exec_comando_req = subprocess.Popen(comando_final, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            if not self.aba_ssh or not self.aba_ssh.obter_ssh_client():
+                exec_comando_req = subprocess.Popen(comando_final, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                stdout, stderr = exec_comando_req.communicate()
+            else:
+                stdin,stdout,stderr= self.aba_ssh.obter_ssh_client().exec_command(comando.replace("\!space!/", " ").replace(self.aba_ssh.obter_local_mount(), self.aba_ssh.obter_local_monta_no_servidor()), timeout=15)
+                stdout = stdout.readlines()
+                if stdout: stdout = stdout[0] 
+                else: stdout = ""
+                stderr = stderr.readlines()
+                if stderr: stderr = stderr[0] 
+                else: stderr = ""
 
-            #if self.rand_formato_output == "default":
-                # necessário passar pelo xxd se o output for binário, noutro caso o python tenta intrepertar cada byte
-            #    xxd = subprocess.Popen(["xxd", "-b"], stdin=exec_comando_req.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            #    stdout, stderr = xxd.communicate()
-            #else:
-            #    stdout, stderr = exec_comando_req.communicate()
-            stdout, stderr = exec_comando_req.communicate()
+
 
             # -- verificar qual o local para o output
             if self.req_output_type == "popup":

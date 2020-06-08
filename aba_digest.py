@@ -24,7 +24,7 @@ except Exception as e:
 
 class Aba_Digest:
 
-    
+    aba_ssh = None
 
     # -- elementos e variáveis
     digest_lbl_erro_config = None
@@ -71,8 +71,9 @@ class Aba_Digest:
     digest_filechooser_rand = None
 
 
-    def __init__(self, builder):
+    def __init__(self, builder, aba_ssh):
         self.builder = builder
+        self.aba_ssh = aba_ssh
 
         # -- carregar lista de algoritmos e preencher lista
         pedido_lista_algortimos_checksum = subprocess.Popen(["openssl", "list", "-digest-commands"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
@@ -288,7 +289,7 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                nome_ficheiro_output = ficheiro
+                nome_ficheiro_output = "\"" + ficheiro + "\""
 
         elif self.digest_local_output == "pasta":
             pasta = self.digest_filechooser_pasta_output.get_filename()
@@ -298,10 +299,10 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                nome_ficheiro_output = pasta + "/" + self.digest_output_pasta_nome_ficheiro
+                nome_ficheiro_output = "\"" + pasta + "/" + self.digest_output_pasta_nome_ficheiro + "\""
 
         if nome_ficheiro_output:
-            comando += " -out " + nome_ficheiro_output.replace(" ", "\!space!/")
+            comando += " -out \"" + nome_ficheiro_output.replace(" ", "\!space!/") + "\""
 
 
         # -- verificar opções sign e verify e verificar se possui ficheiros selecionados
@@ -316,7 +317,7 @@ class Aba_Digest:
             else:
                 #if " " in ficheiro:
                 #    ficheiro = "\"" + ficheiro + "\""
-                sign_verify_adicionar_comando += " -sign " + ficheiro.replace(" ", "\!space!/")
+                sign_verify_adicionar_comando += " -sign \"" + ficheiro.replace(" ", "\!space!/") + "\""
         if self.digest_cb_verify.get_active():
             ficheiro = self.digest_filechooser_verify.get_filename()
             if not ficheiro:
@@ -325,7 +326,7 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                sign_verify_adicionar_comando += " -verify " + ficheiro.replace(" ", "\!space!/")
+                sign_verify_adicionar_comando += " -verify \"" + ficheiro.replace(" ", "\!space!/") + "\""
         if self.digest_cb_prverify.get_active():
             ficheiro = self.digest_filechooser_prverify.get_filename()
             if not ficheiro:
@@ -334,7 +335,7 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                sign_verify_adicionar_comando += " -prverify " + ficheiro.replace(" ", "\!space!/")
+                sign_verify_adicionar_comando += " -prverify \"" + ficheiro.replace(" ", "\!space!/") + "\""
         if self.digest_cb_signature.get_active():
             ficheiro = self.digest_filechooser_signature.get_filename()
             if not ficheiro:
@@ -343,7 +344,7 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                sign_verify_adicionar_comando += " -signature " + ficheiro.replace(" ", "\!space!/")
+                sign_verify_adicionar_comando += " -signature \"" + ficheiro.replace(" ", "\!space!/") + "\""
 
         comando += sign_verify_adicionar_comando
 
@@ -375,7 +376,7 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                outras_opcoes_adicionar_comando += " -rand " + ficheiro.replace(" ", "\!space!/")
+                outras_opcoes_adicionar_comando += " -rand \"" + ficheiro.replace(" ", "\!space!/") + "\""
 
         comando += " " + outras_opcoes_adicionar_comando
 
@@ -386,22 +387,34 @@ class Aba_Digest:
         lista = comando.split()
         comando_final = []
         for p in lista:
-            comando_final.append(p.replace("\!space!/", " "))
+            comando_final.append(p.replace("\!space!/", " ").replace("\"", ""))
 
         # -- tentar executar
         try:
-            if comando_pipe:
-                exec_comando_pip_digest = subprocess.Popen(comando_pipe.split(), stdout=subprocess.PIPE)
-                exec_comando_digest = subprocess.Popen(comando_final, stdin=exec_comando_pip_digest.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            else:
-                exec_comando_digest = subprocess.Popen(comando_final, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            if not self.aba_ssh or not self.aba_ssh.obter_ssh_client():
+                if comando_pipe:
+                    exec_comando_pip_digest = subprocess.Popen(comando_pipe.split(), stdout=subprocess.PIPE)
+                    exec_comando_digest = subprocess.Popen(comando_final, stdin=exec_comando_pip_digest.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                else:
+                    exec_comando_digest = subprocess.Popen(comando_final, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
-            if "binary" in self.digest_output_format:
-                # necessário passar pelo xxd se o output for binário, noutro caso o python tenta intrepertar cada byte
-                xxd = subprocess.Popen(["xxd", "-b"], stdin=exec_comando_digest.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-                stdout, stderr = xxd.communicate()
+                if "binary" in self.digest_output_format:
+                    # necessário passar pelo xxd se o output for binário, noutro caso o python tenta intrepertar cada byte
+                    xxd = subprocess.Popen(["xxd", "-b"], stdin=exec_comando_digest.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                    stdout, stderr = xxd.communicate()
+                else:
+                    stdout, stderr = exec_comando_digest.communicate()
             else:
-                stdout, stderr = exec_comando_digest.communicate()
+                if comando_pipe:
+                    stdin,stdout,stderr= self.aba_ssh.obter_ssh_client().exec_command("echo " + comando_pipe + " | " + comando.replace("\!space!/", " ").replace(self.aba_ssh.obter_local_mount(), self.aba_ssh.obter_local_monta_no_servidor()), timeout=15)
+                else:
+                    stdin,stdout,stderr= self.aba_ssh.obter_ssh_client().exec_command(comando.replace("\!space!/", " ").replace(self.aba_ssh.obter_local_mount(), self.aba_ssh.obter_local_monta_no_servidor()), timeout=15)
+                stdout = stdout.readlines()
+                if stdout: stdout = stdout[0]
+                else: stdout = ""
+                stderr = stderr.readlines()
+                if stderr: stderr = stderr[0]
+                else: stderr = ""
 
             # -- verificar qual o local para o output
             if self.digest_local_output == "texto":

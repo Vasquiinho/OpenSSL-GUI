@@ -27,6 +27,7 @@ except Exception as e:
 class Aba_SSH:
 
     builder = None
+    ssh_local_monta_no_servidor = ""
 
     ssh_lbl_disconnected = None
     ssh_lbl_connected = None
@@ -70,6 +71,15 @@ class Aba_SSH:
         self.local_sftp_mount = os.path.expanduser('~/mount_gui_openssl_sftp')
 
 
+    def obter_ssh_client(self):
+        return self.ssh_client
+
+    def obter_local_mount(self):
+        return self.local_sftp_mount
+
+    def obter_local_monta_no_servidor(self):
+        return self.ssh_local_monta_no_servidor
+
     def __btn_conetar_released(self, btn):
         self.ssh_lbl_erro.set_visible(False)
         self.ssh_btn_conetar.set_sensitive(False)
@@ -91,23 +101,28 @@ class Aba_SSH:
             Popup_Erro_Class("Error", "Unable to verify host key", str(e))
             self.ssh_btn_conetar.set_sensitive(True)
             self.ssh_client = None
+            return
         except paramiko.AuthenticationException as e: 
             Popup_Erro_Class("Error", "SSH Login failed!", str(e))
             self.ssh_btn_conetar.set_sensitive(True)
             self.ssh_client = None
+            return
         except paramiko.SSHException as e: 
             Popup_Erro_Class("Error", "As unknown SSH error has occurred!", str(e))
             self.ssh_btn_conetar.set_sensitive(True)
             self.ssh_client = None
+            return
         except TimeoutError as e: 
             Popup_Erro_Class("Error", "Timed Out!", str(e))
             self.ssh_btn_conetar.set_sensitive(True)
             self.ssh_client = None
+            return
         except Exception as e: 
             print(e)
             Popup_Erro_Class("Error", "As unknown error has occurred!", str(e))
             self.ssh_btn_conetar.set_sensitive(True)
             self.ssh_client = None
+            return
         
         # verificar openssl instalado no servidor
         stdin,stdout,stderr= self.ssh_client.exec_command("openssl version", timeout=5)
@@ -122,8 +137,9 @@ class Aba_SSH:
         if self.ssh_client:
             
             # tenta montar sistema de ficheiros do servidor para poder fazer navegação nos filechoosers
-            password_subp = subprocess.Popen(["echo", "utilizador"], stdout=subprocess.PIPE)
-            montar = subprocess.Popen(["sshfs", "-o", "password_stdin", "-p 5022", "utilizador@192.168.1.20:/home", self.local_sftp_mount], stdin=password_subp.stdout ,stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            password_subp = subprocess.Popen(["echo", password], stdout=subprocess.PIPE)
+            self.ssh_local_monta_no_servidor = "/home/" + utilizador
+            montar = subprocess.Popen(["sshfs", "-o", "password_stdin", "-p " + porta, utilizador + "@" + servidor + ":" + self.ssh_local_monta_no_servidor, self.local_sftp_mount], stdin=password_subp.stdout ,stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             stdout, stderr = montar.communicate()
 
             if stderr:

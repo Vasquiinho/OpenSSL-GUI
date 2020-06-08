@@ -28,6 +28,7 @@ class Aba_Rand:
     rand_lbl_erro_config = None
     rand_comando = "openssl rand"
     rand_input = None
+    aba_ssh = None
 
     # output
     rand_formato_output = "default" # default, base64, hex
@@ -53,8 +54,9 @@ class Aba_Rand:
     rand_txt_writerand_pasta_extra = None
 
 
-    def __init__(self, builder):
+    def __init__(self, builder, aba_ssh):
         self.builder = builder
+        self.aba_ssh = aba_ssh
 
         # -- obter label erro config
         self.rand_lbl_erro_config = self.builder.get_object("rand_lbl_erro_config")
@@ -212,7 +214,7 @@ class Aba_Rand:
                 ficheiro_local_output = pasta + "/" + self.rand_output_pasta_nome_ficheiro
 
         if ficheiro_local_output:
-            comando += " -out " + ficheiro_local_output.replace(" ", "\!space!/")
+            comando += " -out \"" + ficheiro_local_output.replace(" ", "\!space!/") + "\""
 
 
         # -- verificar formato do output (base64, hex, default)
@@ -233,7 +235,7 @@ class Aba_Rand:
                 self.rand_lbl_erro_config.set_visible(True)
                 return
             else:
-                comando += " -rand " + ficheiro.replace(" ", "\!space!/")
+                comando += " -rand \"" + ficheiro.replace(" ", "\!space!/") + "\""
 
         if self.rand_outras_writerand.get_active():
             if self.rand_writerand_tipo_output == "ficheiro":
@@ -256,7 +258,7 @@ class Aba_Rand:
                     ficheiro_local_writerand = pasta + "/" + self.rand_writerand_pasta_nome_ficheiro
 
         if ficheiro_local_writerand:
-            comando += " -writerand " + ficheiro_local_writerand.replace(" ", "\!space!/")
+            comando += " -writerand \"" + ficheiro_local_writerand.replace(" ", "\!space!/") + "\""
 
 
         # -- adicionar número input ao comando
@@ -268,23 +270,35 @@ class Aba_Rand:
         lista = comando.split()
         comando_final = []
         for p in lista:
-            comando_final.append(p.replace("\!space!/", " "))
+            comando_final.append(p.replace("\!space!/", " ").replace("\"", ""))
 
         # -- tentar executar
         try:
-            exec_comando_rand = subprocess.Popen(comando_final, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-
-            if self.rand_formato_output == "default":
-                # necessário passar pelo xxd se o output for binário, noutro caso o python tenta intrepertar cada byte
-                xxd = subprocess.Popen(["xxd", "-b"], stdin=exec_comando_rand.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-                stdout, stderr = xxd.communicate()
+            if not self.aba_ssh or not self.aba_ssh.obter_ssh_client():
+                exec_comando_rand = subprocess.Popen(comando_final, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                if self.rand_formato_output == "default":
+                    # necessário passar pelo xxd se o output for binário, noutro caso o python tenta intrepertar cada byte
+                    xxd = subprocess.Popen(["xxd", "-b"], stdin=exec_comando_rand.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                    stdout, stderr = xxd.communicate()
+                else:
+                    stdout, stderr = exec_comando_rand.communicate()
             else:
-                stdout, stderr = exec_comando_rand.communicate()
+                stdin,stdout,stderr= self.aba_ssh.obter_ssh_client().exec_command(comando.replace("\!space!/", " ").replace(self.aba_ssh.obter_local_mount(), self.aba_ssh.obter_local_monta_no_servidor()), timeout=15)
+                stdout = stdout.readlines()
+                stderr = stderr.readlines()
+                if stderr:
+                    Popup_Erro_Class("Error", "An error as occurred trying to execute the rand command! See details...", str(stderr))
+                    return
+                if self.rand_formato_output == "default":
+                    a = comando.replace("\!space!/", " ").replace(self.aba_ssh.obter_local_mount(), self.aba_ssh.obter_local_monta_no_servidor())
+                    stdin,stdout,stderr = self.aba_ssh.obter_ssh_client().exec_command("echo " + a + " | xxd -b", timeout=15)
+                    stdout = stdout.readlines()
+                    stderr = stderr.readlines()
 
             # -- verificar qual o local para o output
             if self.rand_tipo_output == "output":
                 if not stderr:
-                    Popup_Resultado_Class(stdout)
+                    Popup_Resultado_Class(str(stdout))
                 else:
                     Popup_Erro_Class("Error", "An error as occurred trying to execute the rand command! See details...", str(stderr))
             elif self.rand_tipo_output == "ficheiro" or self.rand_tipo_output == "pasta" :

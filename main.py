@@ -74,6 +74,22 @@ builder = Gtk.Builder()
 builder.add_from_file("GUI/main.glade")
 
 # -- Importar e Iniciar classes relacionadas com as abas da stack. Se em falta, desativar abas onde são necessárias
+
+# -- -- aba_ssh.py
+try:
+    from aba_ssh import Aba_SSH
+    if "aba_ssh" not in sys.modules:
+        print("File 'aba_ssh' missing! Place this in the same folder as main.py")
+        print("Rand options have been disabled!")
+        #builder.get_object("aba_ssh").set_sensitive(False)
+    else:
+        aba_ssh = Aba_SSH(builder, ssh_client)
+except Exception as e:
+    print("File 'aba_ssh' is missing or not loaded properly!")
+    print("Rand options have been disabled!")
+    #builder.get_object("aba_ssh").set_sensitive(False)
+    print(e)
+
 # -- -- aba_checksum.py
 try:
     from aba_digest import Aba_Digest
@@ -82,7 +98,7 @@ try:
         print("Digest options have been disabled!")
         builder.get_object("aba_digest").set_sensitive(False)
     else:
-        Aba_Digest(builder)
+        Aba_Digest(builder, aba_ssh)
 except Exception as e:
     print("File 'aba_digest' is missing or not loaded properly!")
     print("Digest options have been disabled!")
@@ -113,7 +129,7 @@ try:
         print("Rand options have been disabled!")
         builder.get_object("aba_rand").set_sensitive(False)
     else:
-        Aba_Rand(builder)
+        Aba_Rand(builder, aba_ssh)
 except Exception as e:
     print("File 'aba_rand' is missing or not loaded properly!")
     print("Rand options have been disabled!")
@@ -128,26 +144,11 @@ try:
         print("Rand options have been disabled!")
         builder.get_object("aba_req").set_sensitive(False)
     else:
-        Aba_Req(builder)
+        Aba_Req(builder, aba_ssh)
 except Exception as e:
     print("File 'aba_req' is missing or not loaded properly!")
     print("Rand options have been disabled!")
     builder.get_object("aba_req").set_sensitive(False)
-    print(e)
-
-# -- -- aba_ssh.py
-try:
-    from aba_ssh import Aba_SSH
-    if "aba_ssh" not in sys.modules:
-        print("File 'aba_ssh' missing! Place this in the same folder as main.py")
-        print("Rand options have been disabled!")
-        #builder.get_object("aba_ssh").set_sensitive(False)
-    else:
-        Aba_SSH(builder, ssh_client)
-except Exception as e:
-    print("File 'aba_ssh' is missing or not loaded properly!")
-    print("Rand options have been disabled!")
-    #builder.get_object("aba_ssh").set_sensitive(False)
     print(e)
 
 
@@ -155,26 +156,24 @@ except Exception as e:
 window = builder.get_object("base")
 
 def terminar_programa(*args):
-    local_mount = os.path.expanduser('~/mount_gui_openssl_sftp')
-    global sftp_montado
+
+    #print(aba_ssh.obter_ssh_client())
 
     Aba_SSH.desconecta(ssh_client)
 
-    if 'sftp_montado' not in globals():
-        sftp_montado = False
-    if sftp_montado:
-        desmontar = subprocess.Popen(["fusermount", "-u", local_mount],stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    try:
+        desmontar = subprocess.Popen(["fusermount", "-u", aba_ssh.obter_local_mount()],stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         stdout, stderr = desmontar.communicate()
-
-        print("Unmounting the sftp mounted filesystem")
 
         if(desmontar.returncode != 0):
             print("Unable to unmount the system")
-            Popup_Erro_Class("Warning", "Unable to unmount the sftp of the remote system", "A problem ocurred trying to unmount the sftp filesystem created for the ssh user provided!\nMount location: " + local_mount + "\n" + stderr, True)
+            #Popup_Erro_Class("Warning", "Unable to unmount the sftp of the remote system", "A problem ocurred trying to unmount the sftp filesystem created for the ssh user provided!\nMount location: " + local_mount + "\n" + stderr, True)
         else:
             Gtk.main_quit
             exit(0)
-    else:
+    except:
+        print("")
+    finally:
         Gtk.main_quit
         exit(0)
 
