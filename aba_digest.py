@@ -275,7 +275,7 @@ class Aba_Digest:
                 self.digest_lbl_erro_config.set_visible(True)
                 return
             else:
-                nome_ficheiro_input = ficheiro
+                nome_ficheiro_input = "\"" + ficheiro.replace(" ", "\!space!/") + "\""
 
 
         comando += self.digest_comando + " " + self.digest_algoritmo + " " + self.digest_output_format

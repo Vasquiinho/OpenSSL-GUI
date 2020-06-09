@@ -151,6 +151,21 @@ except Exception as e:
     builder.get_object("aba_req").set_sensitive(False)
     print(e)
 
+# -- -- aba_enc.py
+try:
+    from aba_enc import Aba_Enc
+    if "aba_enc" not in sys.modules:
+        print("File 'aba_enc' missing! Place this in the same folder as main.py")
+        print("Rand options have been disabled!")
+        builder.get_object("aba_enc").set_sensitive(False)
+    else:
+        Aba_Enc(builder, aba_ssh)
+except Exception as e:
+    print("File 'aba_enc' is missing or not loaded properly!")
+    print("Rand options have been disabled!")
+    builder.get_object("aba_enc").set_sensitive(False)
+    print(e)
+
 
 
 window = builder.get_object("base")
