@@ -58,6 +58,8 @@ class Aba_Enc:
     # key
     enc_key_cb_pass = None
     enc_key_input_pass = None
+    enc_key_cb_chiper = None
+    enc_key_combo_cipher = None
     enc_key_cb_md = None
     enc_key_combo_digest = None
     enc_key_cb_iter = None
@@ -142,6 +144,9 @@ class Aba_Enc:
         self.enc_key_cb_pass = self.builder.get_object("enc_key_cb_pass")
         self.enc_key_cb_pass.connect("toggled", self.__cb_pass_toggled)
         self.enc_key_input_pass = self.builder.get_object("enc_key_input_pass")
+        self.enc_key_cb_chiper = self.builder.get_object("enc_key_cb_chiper")
+        self.enc_key_cb_chiper.connect("toggled", self.__cb_cipher_toggled)
+        self.enc_key_combo_cipher = self.builder.get_object("enc_key_combo_cipher")
         self.enc_key_cb_md = self.builder.get_object("enc_key_cb_md")
         self.enc_key_cb_md.connect("toggled", self.__cb_md_toggled)
         self.enc_key_combo_digest = self.builder.get_object("enc_key_combo_digest")
@@ -161,6 +166,25 @@ class Aba_Enc:
         self.enc_key_cb_iv.connect("toggled", self.__cb_iv_toggled)
         self.enc_key_input_iv = self.builder.get_object("enc_key_input_iv")
         self.enc_key_cb_nopad = self.builder.get_object("enc_key_cb_nopad")
+
+        pedido_lista_algortimos_digest = subprocess.Popen(["openssl", "list", "-digest-commands"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        stdout, stderr = pedido_lista_algortimos_digest.communicate()
+        if not stderr:
+            for algoritmo in stdout.split():
+                    self.enc_key_combo_digest.append_text(algoritmo)
+        else:
+            print("An error as occurred loading digest algorithms")
+            self.enc_key_combo_digest.append_text("An error as occurred loading digest algorithms")
+
+        pedido_lista_algortimos_cipher = subprocess.Popen(["openssl", "enc", "-list"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        stdout, stderr = pedido_lista_algortimos_cipher.communicate()
+        if not stderr:
+            for algoritmo in stdout.split():
+                if "ciphers" not in algoritmo and "Supported" not in algoritmo:
+                    self.enc_key_combo_cipher.append_text(algoritmo)
+        else:
+            print("An error as occurred loading digest algorithms")
+            self.enc_key_combo_cipher.append_text("An error as occurred loading cipher algorithms")
 
         # outras
         self.enc_outras_cb_A = self.builder.get_object("enc_outras_cb_A")
@@ -225,8 +249,10 @@ class Aba_Enc:
     def __rd_salt_nosalt_toggled(self, rd):
         if "no" in rd.get_label():
             self.enc_key_input_salt.set_visible(False)
+            self.enc_key_input_salt.set_sensitive(False)
         else:
             self.enc_key_input_salt.set_visible(True)
+            self.enc_key_input_salt.set_sensitive(True)
 
     def __cb_iter_toggled(self, cb):
         self.enc_key_input_iter.set_sensitive(cb.get_active())
@@ -234,6 +260,9 @@ class Aba_Enc:
     def __cb_pass_toggled(self, cb):
         self.enc_key_input_pass.set_sensitive(cb.get_active())
     
+    def __cb_cipher_toggled(self, cb):
+        self.enc_key_combo_cipher.set_sensitive(cb.get_active())
+
     def __cb_md_toggled(self, cb):
         self.enc_key_combo_digest.set_sensitive(cb.get_active())
 
@@ -332,7 +361,112 @@ class Aba_Enc:
         if ficheiro_local_output:
             comando += " -out \"" + ficheiro_local_output.replace(" ", "\!space!/") + "\" "
 
+        # key
+        if self.enc_key_cb_pass.get_active():
+            password = self.enc_key_input_pass.get_text()
+            if not password:
+                txt_lbl_erro = "Password option checked! You must insert a password in key settings"
+                self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                self.enc_lbl_erro_config.set_visible(True)
+                return
+            else:
+                comando += " -pass pass:" + password.replace(" ", "\!space!/") + " "
+        if self.enc_key_cb_chiper.get_active():
+            if not self.enc_key_combo_cipher.get_active_text() == "An error as occurred loading cipher algorithms" and not self.enc_key_combo_cipher.get_active_text() == "Select chiper algorithm...": 
+                comando += " " + self.enc_key_combo_cipher.get_active_text() + " "
+            elif not self.enc_key_combo_cipher.get_active_text() == "An error as occurred loading cipher algorithms":
+                txt_lbl_erro = "Cipher option checked in key settings. You must select cipher algorithm!"
+                self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                self.enc_lbl_erro_config.set_visible(True)
+                return
+        if self.enc_key_cb_md.get_active():
+            if not self.enc_key_combo_digest.get_active_text() == "An error as occurred loading digest algorithms" and not self.enc_key_combo_digest.get_active_text() == "Select digest algorithm...": 
+                comando += " -md " + self.enc_key_combo_digest.get_active_text() + " "
+            elif not self.enc_key_combo_digest.get_active_text() == "An error as occurred loading cipher algorithms":
+                txt_lbl_erro = "Digest option checked in key settings. You must select Digest algorithm!"
+                self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                self.enc_lbl_erro_config.set_visible(True)
+                return
+        if self.enc_key_cb_iter.get_active():
+            if self.enc_key_input_iter.get_value() is not None:
+                comando += " -iter " + str(self.enc_key_input_iter.get_value()).replace(".0", "") + " "
+            else:
+                txt_lbl_erro = "Iter option checked in key settings. You must select the number of iterations!"
+                self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                self.enc_lbl_erro_config.set_visible(True)
+                return
+        if self.enc_key_cb_pbkdf2.get_active():
+            comando += " -pbkdf2 "
+        if self.enc_key_rd_nosalt.get_active():
+            comando += " -nosalt "
+        if self.enc_key_rd_salt.get_active():
+            salt = self.enc_key_input_salt.get_text()
+            if not salt:
+                txt_lbl_erro = "Salt option checked! You must insert a hexadecimal valuer for Salt in key settings"
+                self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                self.enc_lbl_erro_config.set_visible(True)
+                return
+            else:
+                try:
+                    int(salt, 16)
+                    comando += " -salt -S " + salt + " "
+                except:
+                    txt_lbl_erro = "Given salt in key options isn't a hexadecimal value!"
+                    self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                    self.enc_lbl_erro_config.set_visible(True)
+                    return
+        if self.enc_key_cb_key.get_active():
+            key = self.enc_key_input_key.get_text()
+            if not key:
+                txt_lbl_erro = "Key option checked! You must insert a hexadecimal valuer for key in key settings"
+                self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                self.enc_lbl_erro_config.set_visible(True)
+                return
+            else:
+                try:
+                    int(key, 16)
+                    comando += " -key " + key + " "
+                except:
+                    txt_lbl_erro = "Given key in key options isn't a hexadecimal value!"
+                    self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                    self.enc_lbl_erro_config.set_visible(True)
+                    return
+        if self.enc_key_cb_iv.get_active():
+            iv = self.enc_key_input_iv.get_text()
+            if not key:
+                txt_lbl_erro = "IV option checked! You must insert a hexadecimal valuer for IV in key settings"
+                self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                self.enc_lbl_erro_config.set_visible(True)
+                return
+            else:
+                try:
+                    int(iv, 16)
+                    comando += " -iv " + iv + " "
+                except:
+                    txt_lbl_erro = "Given IV in key options isn't a hexadecimal value!"
+                    self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                    self.enc_lbl_erro_config.set_visible(True)
+                    return
+        if self.enc_key_cb_nopad.get_active():
+            comando += " -nopad "
+
+        # key - outras validações: necessário pass ou key + iv
+        if not any(x in comando for x in ["-pass", "-K", "-iv"]):
+            txt_lbl_erro = "A Password or KEY + IV must be defined in key options!"
+            self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+            self.enc_lbl_erro_config.set_visible(True)
+            return
         
+        if "-K" in comando and not "-iv" in comando:
+            txt_lbl_erro = "You specified a Key. IV must also be specified!"
+            self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+            self.enc_lbl_erro_config.set_visible(True)
+            return
+
+        
+        # outras
+        
+
 
 
         print(comando_pipe + " | " + comando)

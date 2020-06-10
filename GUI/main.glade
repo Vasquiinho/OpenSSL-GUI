@@ -2843,6 +2843,49 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <child>
+                                      <object class="GtkCheckButton" id="enc_key_cb_chiper">
+                                        <property name="label" translatable="yes">Cipher (-cipher)</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">False</property>
+                                        <property name="draw_indicator">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkComboBoxText" id="enc_key_combo_cipher">
+                                        <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_top">2</property>
+                                        <property name="margin_bottom">5</property>
+                                        <property name="active">0</property>
+                                        <items>
+                                          <item id="&lt;inserir ID&gt;" translatable="yes">Select chiper algorithm...</item>
+                                        </items>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">True</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <child>
                                       <object class="GtkCheckButton" id="enc_key_cb_md">
                                         <property name="label" translatable="yes">Digest (-md)</property>
                                         <property name="visible">True</property>
@@ -2879,7 +2922,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">2</property>
+                                    <property name="position">3</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -2918,7 +2961,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">3</property>
+                                    <property name="position">4</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -2933,7 +2976,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">4</property>
+                                    <property name="position">5</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -2978,13 +3021,12 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">5</property>
+                                    <property name="position">6</property>
                                   </packing>
                                 </child>
                                 <child>
                                   <object class="GtkEntry" id="enc_key_input_salt">
                                     <property name="visible">True</property>
-                                    <property name="sensitive">False</property>
                                     <property name="can_focus">True</property>
                                     <property name="invisible_char">•</property>
                                     <property name="placeholder_text" translatable="yes">Salt (hex digits only!) (random salt will be generated if not given)</property>
@@ -2992,7 +3034,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">True</property>
                                     <property name="fill">True</property>
-                                    <property name="position">6</property>
+                                    <property name="position">7</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -3032,7 +3074,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">7</property>
+                                    <property name="position">8</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -3072,7 +3114,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">8</property>
+                                    <property name="position">9</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -3087,7 +3129,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">9</property>
+                                    <property name="position">10</property>
                                   </packing>
                                 </child>
                               </object>
@@ -3126,6 +3168,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">3</property>
                                     <property name="margin_bottom">3</property>
                                     <property name="draw_indicator">True</property>
@@ -3142,6 +3185,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">3</property>
                                     <property name="margin_bottom">3</property>
                                     <property name="draw_indicator">True</property>
@@ -3158,6 +3202,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">3</property>
                                     <property name="margin_bottom">3</property>
                                     <property name="draw_indicator">True</property>
@@ -3215,6 +3260,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">3</property>
                                     <property name="margin_bottom">3</property>
                                     <property name="draw_indicator">True</property>
@@ -3231,6 +3277,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">3</property>
                                     <property name="margin_bottom">3</property>
                                     <property name="draw_indicator">True</property>
