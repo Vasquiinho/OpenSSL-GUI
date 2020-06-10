@@ -3,7 +3,7 @@
 This is a simple GUI for OpenSSL developed in Python for Ubuntu
 Developed in Ubuntu 20.04 and Python 3.8.
 
-![alt text](https://raw.githubusercontent.com/Vasquiinho/GUI_OpenSSL/master/Image/apresentacao.PNG | width=600)
+![alt text](https://raw.githubusercontent.com/Vasquiinho/GUI_OpenSSL/master/Image/apresentacao.PNG)
 
 ### Functionality
 - Req Options (Request Certificate or Generate Self-Signed Certificate)
