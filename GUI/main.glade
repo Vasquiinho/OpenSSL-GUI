@@ -2502,6 +2502,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">3</property>
                                     <property name="margin_bottom">3</property>
                                     <property name="draw_indicator">True</property>
@@ -2518,6 +2519,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">3</property>
                                     <property name="margin_bottom">3</property>
                                     <property name="draw_indicator">True</property>
@@ -2534,6 +2536,7 @@ Other Names and Values that aren't in the combobox can be used. Simply write the
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">False</property>
+                                    <property name="halign">start</property>
                                     <property name="margin_top">3</property>
                                     <property name="margin_bottom">3</property>
                                     <property name="draw_indicator">True</property>

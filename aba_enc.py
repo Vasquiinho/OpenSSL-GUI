@@ -42,6 +42,7 @@ class Aba_Enc:
     enc_cb_input_e = None
     enc_cb_input_d = None
     enc_cb_input_a = None
+    usa_base64 = False
 
     # output
     enc_rd_output_type_popup = None
@@ -334,6 +335,9 @@ class Aba_Enc:
             comando += " -d "
         if self.enc_cb_input_a.get_active():
             comando += " -a "
+            self.usa_base64 = True
+        else:
+            self.usa_base64 = False
         
         # output
         # -- verificar e selecionar o local do output do resultado
@@ -456,7 +460,6 @@ class Aba_Enc:
             self.enc_lbl_erro_config.set_text(txt_lbl_erro)
             self.enc_lbl_erro_config.set_visible(True)
             return
-        
         if "-K" in comando and not "-iv" in comando:
             txt_lbl_erro = "You specified a Key. IV must also be specified!"
             self.enc_lbl_erro_config.set_text(txt_lbl_erro)
@@ -465,8 +468,106 @@ class Aba_Enc:
 
         
         # outras
-        
+        if self.enc_outras_cb_A.get_active():
+            comando += " -A "
+        if self.enc_outras_cb_p.get_active():
+            comando += " -p "
+        if self.enc_outras_cb_P.get_active():
+            comando += " -P "
+        if self.enc_outras_cb_bufsize.get_active():
+            if self.enc_outras_input_bufsize.get_value() is not None:
+                comando += " -bufsize " + str(self.enc_outras_input_bufsize.get_value()).replace(".0", "") + " "
+            else:
+                txt_lbl_erro = "Biffer Size option checked in other settings. You must define the size of the buffer!"
+                self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                self.enc_lbl_erro_config.set_visible(True)
+                return
+        if self.enc_outras_cb_none.get_active():
+            comando += " -none "
+        if self.enc_outras_cb_z.get_active():
+            comando += " -z "
+        if self.enc_outras_rand.get_active():
+            ficheiro = self.enc_filechooser_rand.get_filename()
+            if not ficheiro:
+                txt_lbl_erro = "You checked '-rand' option in 'Other options'. You must select a Rand file."
+                self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                self.enc_lbl_erro_config.set_visible(True)
+                return
+            else:
+                comando += " -rand \"" + ficheiro.replace(" ", "\!space!/") + "\""
+        ficheiro_local_writerand = ""
+        if self.enc_outras_writerand.get_active():
+            if self.enc_writerand_tipo_output == "ficheiro":
+                ficheiro = self.enc_filechooser_ficheiro_writerand.get_filename()
+                if not ficheiro:
+                    txt_lbl_erro = "You must select a file for the writerand output"
+                    self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                    self.enc_lbl_erro_config.set_visible(True)
+                    return
+                else:
+                    ficheiro_local_writerand = ficheiro
+            elif self.enc_writerand_tipo_output == "pasta":
+                pasta = self.enc_filechooser_local_writerand.get_filename()
+                if not pasta:
+                    txt_lbl_erro = "You must select a location for the writerand output file"
+                    self.enc_lbl_erro_config.set_text(txt_lbl_erro)
+                    self.enc_lbl_erro_config.set_visible(True)
+                    return
+                else:
+                    ficheiro_local_writerand = pasta + "/" + self.enc_writerand_pasta_nome_ficheiro
+        if ficheiro_local_writerand:
+            comando += " -writerand \"" + ficheiro_local_writerand.replace(" ", "\!space!/") + "\""
 
+        #print(comando_pipe + " | " + comando)
 
+        # tentar executar
+        lista = comando.split()
+        comando_final = []
+        for p in lista:
+            comando_final.append(p.replace("\!space!/", " ").replace("\"", ""))
 
-        print(comando_pipe + " | " + comando)
+        try:
+            if not self.aba_ssh or not self.aba_ssh.obter_ssh_client():
+                if comando_pipe:
+                    exec_comando_pip_enc = subprocess.Popen(comando_pipe.split(), stdout=subprocess.PIPE)
+                    exec_comando_enc = subprocess.Popen(comando_final, stdin=exec_comando_pip_enc.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                else:
+                    exec_comando_enc = subprocess.Popen(comando_final, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+                if not self.usa_base64:
+                    xxd = subprocess.Popen(["xxd", "-b"], stdin=exec_comando_enc.stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                    stdout, stderr = xxd.communicate()
+                else:
+                    stdout, stderr = exec_comando_enc.communicate()
+            else:
+                if comando_pipe:
+                    stdin,stdout,stderr= self.aba_ssh.obter_ssh_client().exec_command(comando_pipe + " | " + comando.replace("\!space!/", " ").replace(self.aba_ssh.obter_local_mount(), self.aba_ssh.obter_local_monta_no_servidor()), timeout=15)
+                else:
+                    stdin,stdout,stderr= self.aba_ssh.obter_ssh_client().exec_command(comando.replace("\!space!/", " ").replace(self.aba_ssh.obter_local_mount(), self.aba_ssh.obter_local_monta_no_servidor()), timeout=15)
+                stdout = stdout.readlines()
+                if stdout: stdout = stdout[0] 
+                else: stdout = ""
+                stderr = stderr.readlines()
+                if stderr: stderr = stderr[0] 
+                else: stderr = ""
+
+                if "-a" not in comando and not stderr:
+                    xxd = subprocess.Popen(["xxd", "-b"], stdin=stdout, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                    stdout, stderr = xxd.communicate()
+
+            # -- verificar qual o local para o output
+            if self.enc_tipo_output == "popup":
+                if not stderr or (stdout and stderr):
+                    Popup_Resultado_Class(stderr + "\n" + stdout)
+                else:
+                    Popup_Erro_Class("Error", "An error as occurred trying to execute the enc command! See details...", str(stderr))
+                #Popup_Resultado_Class(stderr + "\n" + stdout)
+            elif self.enc_tipo_output == "ficheiro" or self.enc_tipo_output == "pasta" :
+                if not stderr or (stdout and stderr):
+                    Popup_Resultado_Class("Command executed successfully! Check the output file")
+                else:
+                    Popup_Erro_Class("Error", "An error as occurred trying to execute the enc command! See details...", str(stderr))
+                #Popup_Resultado_Class(stderr + "\n" + stdout)
+
+        except Exception as e:
+            Popup_Erro_Class("Error", "An error as occurred trying to execute the enc command! See details...", str(e))
