@@ -137,6 +137,11 @@ class Aba_SSH:
         if self.ssh_client:
             
             # tenta montar sistema de ficheiros do servidor para poder fazer navegação nos filechoosers
+            try:
+            	os.mkdir(self.local_sftp_mount)
+            except:
+            	print("Dir for mount point already exists. Continuing...")
+            
             password_subp = subprocess.Popen(["echo", password], stdout=subprocess.PIPE)
             self.ssh_local_monta_no_servidor = "/home/" + utilizador
             montar = subprocess.Popen(["sshfs", "-o", "password_stdin", "-p " + porta, utilizador + "@" + servidor + ":" + self.ssh_local_monta_no_servidor, self.local_sftp_mount], stdin=password_subp.stdout ,stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
