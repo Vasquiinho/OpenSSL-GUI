@@ -51,6 +51,12 @@ Developed in Ubuntu 20.04 and Python 3.8.
     - FUSE kernel interface 7.9
   
   (Other configurations may work, i didn't test other versions)
+  
+### Errors
+When connecting to SSH, it may hang for a bit and then say in the error details "Timeout waiting for prompt". This may happen because is the first time that the machine tries to connect to that ssh server, so the ECDSA key fingerprint wasn't yet accepted. To fix this, open a terminal and establish a ssh connection, and accept the ECDSA key.
+
+
+-------------------
 
 *Do not run main.py with sudo if you want to use ssh. SSHFS will not work properly, and because of that SSH connection will not be allowed. SSHFS is used to mount the remote system filesystem so that the user can use the filechoosers inputs to select the files in the remote system via gui.*
 
