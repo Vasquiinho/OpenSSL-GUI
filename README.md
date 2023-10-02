@@ -74,3 +74,6 @@ This application was developed for the Network and Systems Security Curricular U
 
 
 Feel free to use and edit this project for your own needs.
+
+## See also
+* [List of cryptography GUI tools](https://gist.github.com/stokito/eea7ee50d51e1db30122e2e33a62723e)
